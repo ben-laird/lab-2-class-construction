@@ -9,14 +9,16 @@ on:
 env:
   cache-name: build-cache
 
-defaults:
-  run:
-    working-directory: cpp
-
 jobs:
-  build:
-    name: Build 
+  build_cpp:
+    name: Build C++
+    env:
+      cwd: cpp
+
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ${{ env.cwd }}
 
     steps:
       - name: Checkout branch
@@ -31,10 +33,12 @@ jobs:
           cache-key: ${{ env.cache-name }}-${{ runner.os }}
         with:
           path: |
-             cpp/zig-out
-             cpp/zig-cache
+             ${{ env.cwd }}/zig-out
+             ${{ env.cwd }}/zig-cache
           key: ${{ env.cache-key }}
           restore-keys: ${{ env.cache-key }}
+
+      # Where the magic happens :sparkle:
 
       - name: Build code
         run: zig build
@@ -44,6 +48,6 @@ jobs:
         with:
           name: build
           path: |
-            cpp/src
-            cpp/zig-out/bin
-            cpp/README.md
+            ${{ env.cwd }}/src
+            ${{ env.cwd }}/zig-out
+            ${{ env.cwd }}/README.md
