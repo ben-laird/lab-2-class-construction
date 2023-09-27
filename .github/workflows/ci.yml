@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: "*"
+  pull_request:
+    branches: main
+
+env:
+  cache-name: build-cache
+
+jobs:
+  build:
+    name: Build 
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: |
+            cpp
+
+      - name: Set up Zig
+        uses: goto-bus-stop/setup-zig@v2
+
+      - name: Restore or create cache
+        uses: actions/cache@v3
+        env:
+          cache-key: ${{ env.cache-name }}-${{ runner.os }}
+        with:
+          path: |
+             zig-out
+             zig-cache
+          key: ${{ env.cache-key }}
+          restore-keys: ${{ env.cache-key }}
+
+      - name: Build code
+        run: zig build
+
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            src
+            zig-out/bin
+            README.md
