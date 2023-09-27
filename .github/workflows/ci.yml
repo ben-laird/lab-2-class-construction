@@ -55,7 +55,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: build-${{ runner.os }}-${{ env.cwd }}
+          name: build-${{ env.cwd }}-${{ runner.os }}
           path: |
             ${{ env.cwd }}/src
             ${{ env.cwd }}/zig-out
@@ -107,7 +107,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: build-${{ runner.os }}-${{ env.cwd }}
+          name: build-${{ env.cwd }}-${{ runner.os }}
           path: |
             ${{ env.cwd }}/src
             ${{ env.cwd }}/target
