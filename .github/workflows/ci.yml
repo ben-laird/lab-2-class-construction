@@ -27,8 +27,8 @@ jobs:
           cache-key: ${{ env.cache-name }}-${{ runner.os }}
         with:
           path: |
-             zig-out
-             zig-cache
+             cpp/zig-out
+             cpp/zig-cache
           key: ${{ env.cache-key }}
           restore-keys: ${{ env.cache-key }}
 
@@ -36,6 +36,7 @@ jobs:
         run: cd cpp
 
       - name: Build code
+        working-directory: ./cpp
         run: zig build
 
       - name: Upload build
