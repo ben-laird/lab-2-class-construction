@@ -3,7 +3,6 @@ name: Main CI
 on:
   push:
     branches: main
-    paths: '!README.md'
 
 env:
   cache-name: build-cache    
