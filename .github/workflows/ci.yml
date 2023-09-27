@@ -9,6 +9,10 @@ on:
 env:
   cache-name: build-cache
 
+defaults:
+  run:
+    working-directory: cpp
+
 jobs:
   build:
     name: Build 
@@ -32,11 +36,7 @@ jobs:
           key: ${{ env.cache-key }}
           restore-keys: ${{ env.cache-key }}
 
-      - name: Go to C++ directory
-        run: cd cpp
-
       - name: Build code
-        working-directory: ./cpp
         run: zig build
 
       - name: Upload build
@@ -44,6 +44,6 @@ jobs:
         with:
           name: build
           path: |
-            src
-            zig-out/bin
+            cpp/src
+            cpp/zig-out/bin
             README.md
