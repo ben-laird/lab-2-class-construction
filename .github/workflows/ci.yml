@@ -6,16 +6,21 @@ on:
     branches: main
 
 env:
-  cache-name: build-cache
+  cache-name: build-cache    
 
 jobs:
-  build_cpp:
-    name: Build C++
+  build_w_zig:
+    name: Build ./${{ matrix.cwd }} with Zig
     env:
-      cwd: cpp
+      cwd: ${{ matrix.cwd }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os:
+          - windows-latest
+          - ubuntu-latest
+        cwd:
+          - cpp
+          - zig
 
     runs-on: ${{ matrix.os }}
     defaults:
@@ -32,24 +37,78 @@ jobs:
       - name: Add cache
         uses: actions/cache@v3
         env:
-          cache-key: ${{ env.cache-name }}-${{ runner.os }}
+          base-key: ${{ env.cache-name }}-${{ runner.os }}
         with:
           path: |
              ${{ env.cwd }}/zig-out
              ${{ env.cwd }}/zig-cache
-          key: ${{ env.cache-key }}
-          restore-keys: ${{ env.cache-key }}
+          key: ${{ env.base-key }}-${{ env.cwd }}
+          restore-keys: ${{ env.base-key }}
 
       # Where the magic happens :sparkle:
 
       - name: Build code
-        run: zig build
+        run: zig build --verbose --summary all --color
+      # - name: Test code
+      #   run: zig test
 
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: build-${{ runner.os }}
+          name: build-${{ runner.os }}-${{ env.cwd }}
           path: |
             ${{ env.cwd }}/src
             ${{ env.cwd }}/zig-out
+            ${{ env.cwd }}/README.md
+
+  build_rs:
+    name: Build Rust
+    env:
+      cwd: rs
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+        toolchain:
+          - stable
+          - beta
+          - nightly
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ${{ env.cwd }}
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+
+      - name: Add cache
+        uses: actions/cache@v3
+        env:
+          base-key: ${{ env.cache-name }}-${{ runner.os }}
+        with:
+          path: |
+             ${{ env.cwd }}/target
+             ${{ env.cwd }}/Cargo.lock
+          key: ${{ env.base-key }}-${{ env.cwd }}
+          restore-keys: ${{ env.base-key }}
+
+      # Where the magic happens :sparkle:
+
+      - name: Set up Rust toolchain
+        run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - name: Build code
+        run: cargo build --verbose --color always
+      # - name: Test code
+      #   run: cargo test --verbose
+
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ runner.os }}-${{ env.cwd }}
+          path: |
+            ${{ env.cwd }}/src
+            ${{ env.cwd }}/target
             ${{ env.cwd }}/README.md

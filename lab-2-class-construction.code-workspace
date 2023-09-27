@@ -1,1 +1,20 @@
-{ "folders": [{"name": "C++ Implementation", "path": "cpp"}, { "name": "Root", "path": "." }] }
+{
+  "folders": [
+    {
+      "name": "C++ Implementation",
+      "path": "cpp"
+    },
+    {
+      "name": "Rust Implementation",
+      "path": "rs"
+    },
+    {
+      "name": "Zig Implementation",
+      "path": "zig"
+    },
+    {
+      "name": "Root",
+      "path": "."
+    }
+  ]
+}
