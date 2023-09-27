@@ -9,8 +9,8 @@ env:
   cache-name: build-cache    
 
 jobs:
-  build_w_zig:
-    name: Build ./${{ matrix.cwd }} with Zig
+  zig_build:
+    name: Zig Build
     env:
       cwd: ${{ matrix.cwd }}
     strategy:
@@ -61,8 +61,8 @@ jobs:
             ${{ env.cwd }}/zig-out
             ${{ env.cwd }}/README.md
 
-  build_rs:
-    name: Build Rust
+  rs_build:
+    name: Rust Build
     env:
       cwd: rs
     strategy:
