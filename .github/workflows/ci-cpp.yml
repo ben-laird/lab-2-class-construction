@@ -12,12 +12,16 @@ env:
 
 jobs:
   suite:
-    name: C++ Build & Test      
+    name: C++ Build & Test
+    cancel-timeout-minutes: ${{ matrix.time_limit }}
     strategy:
       matrix:
         os:
           - windows-latest
           - ubuntu-latest
+        include:
+          - os: ubuntu-latest
+            time_limit: 2
 
     runs-on: ${{ matrix.os }}
     defaults:
