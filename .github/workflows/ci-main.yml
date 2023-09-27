@@ -1,9 +1,9 @@
-name: CI
+name: Main CI
 
 on:
   push:
-  pull_request:
     branches: main
+    paths: '!README.md'
 
 env:
   cache-name: build-cache    
@@ -15,12 +15,12 @@ jobs:
       cwd: ${{ matrix.cwd }}
     strategy:
       matrix:
-        os:
-          - windows-latest
-          - ubuntu-latest
         cwd:
           - cpp
           - zig
+        os:
+          - windows-latest
+          - ubuntu-latest
 
     runs-on: ${{ matrix.os }}
     defaults:
@@ -103,7 +103,7 @@ jobs:
       - name: Build code
         run: cargo build --verbose --color always
       # - name: Test code
-      #   run: cargo test --verbose
+      #   run: cargo test --verbose --color always
 
       - name: Upload build
         uses: actions/upload-artifact@v3
