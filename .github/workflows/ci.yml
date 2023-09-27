@@ -48,7 +48,7 @@ jobs:
       # Where the magic happens :sparkle:
 
       - name: Build code
-        run: zig build --verbose --summary all --color
+        run: zig build --verbose --summary all --color on
       # - name: Test code
       #   run: zig test
 
