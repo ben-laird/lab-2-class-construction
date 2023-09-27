@@ -17,9 +17,9 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-        with:
-          sparse-checkout: |
-            cpp
+
+      - name: Go to C++ directory
+        run: cd cpp
 
       - name: Set up Zig
         uses: goto-bus-stop/setup-zig@v2
