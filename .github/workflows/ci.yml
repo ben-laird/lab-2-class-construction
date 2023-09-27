@@ -46,4 +46,4 @@ jobs:
           path: |
             cpp/src
             cpp/zig-out/bin
-            README.md
+            cpp/README.md
