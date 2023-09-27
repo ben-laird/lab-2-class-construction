@@ -16,5 +16,14 @@
       "name": "Root",
       "path": "."
     }
-  ]
+  ],
+  "settings": {
+    "conventionalCommits.scopes": [
+      "C++",
+      "Zig",
+      "Rust",
+      "renovate",
+      "meta"
+    ]
+  }
 }
