@@ -8,11 +8,11 @@ on:
 
 env:
   cwd: zig
-  cache-name: build-cache    
+  cache-name: build-cache
 
 jobs:
   suite:
-    name: Zig Build & Test      
+    name: Zig Build & Test
     strategy:
       matrix:
         os:
@@ -36,20 +36,24 @@ jobs:
           base-key: ${{ env.cache-name }}-${{ runner.os }}
         with:
           path: |
-             ${{ env.cwd }}/zig-out
-             ${{ env.cwd }}/zig-cache
+            ${{ env.cwd }}/zig-out
+            ${{ env.cwd }}/zig-cache
           key: ${{ env.base-key }}-${{ env.cwd }}
           restore-keys: ${{ env.base-key }}
 
       - name: Set up Zig
         uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.11.0
 
       # Where the magic happens :sparkle:
 
       - name: Build code
         run: zig build --verbose --summary all --color on
       - name: Test code
-        run: zig test src/** --color on
+        run: zig test ${{ env.src_dir }} --color on
+        env:
+          src_dir: ${{ runner.os == 'Windows' && 'src\**' || 'src/**' }}
 
       - name: Upload build
         uses: actions/upload-artifact@v3
